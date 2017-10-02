@@ -9,10 +9,11 @@ export default class ItemList extends React.Component {
 		super(props);
 		this.state = {
 			itemList: this.props.items,
-			currentItem: '',
+			currentItem: [],
 			min: '',
 			max: '',
-			priceOption: ['L to H', 'H to L']
+			priceOption: ['L to H', 'H to L'],
+			auth: this.props.auth
 		}
 		this.showOneItem = this.showOneItem.bind(this);
 		this.handleMinPrice = this.handleMinPrice.bind(this);
@@ -23,16 +24,14 @@ export default class ItemList extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		console.log(nextProps, 'nextProps')
 		this.setState({
-			itemList: nextProps.items
+			itemList: nextProps.items,
+			currentItem: nextProps.currentItem
 		});
 	}
 
 	showOneItem(clicked) {
-    this.setState({
-      currentItem: clicked
-    })
+		this.props.handleOneItem(clicked)
   }
 
   handlePrice() {
@@ -85,20 +84,19 @@ export default class ItemList extends React.Component {
 
 		return(
 			<div>
-				<Col sm={4} md={3}>
 				<ul className='PriceRange'>
-					<input type='text' value={this.state.min} onChange={this.handleMinPrice} size='2' placeholder='Min'/>
-					<input type='text' value={this.state.max} onChange={this.handleMaxPrice} size='2' placeholder='Max'/>					
+					<input type='text' value={this.state.min} onChange={this.handleMinPrice} placeholder='Min'/>
+					<input type='text' value={this.state.max} onChange={this.handleMaxPrice} placeholder='Max'/>					
 					<Button onClick={this.handlePrice}> Search </Button>
 					<Dropdown options={this.state.priceOption} value={`Price Sort`} onChange={this.handlePriceSort}/>
 				</ul>
 				<div>
-					<ItemView currentItem={this.state.currentItem} handleSave={this.handleSave}/>
+					<ItemView auth={this.state.auth} currentItem={this.state.currentItem} handleSave={this.handleSave}
+					/>
 				</div>
 					<ul className='itemEntry'>
 						{itemList}
 					</ul>
-				</Col>
 			</div>
 		)
 	}

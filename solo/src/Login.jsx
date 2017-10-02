@@ -1,4 +1,5 @@
 import React from 'react';
+import {Button} from 'react-bootstrap';
 
 export default class Login extends React.Component {
 	constructor(props) {
@@ -41,17 +42,15 @@ export default class Login extends React.Component {
 
 	render() {
 		return(
-			<div className='login'>
-				<div>
-					<input type='text' value={this.state.username} placeholder={`Enter username`}
+			<div>
+				<form className='form-signin'>
+					<input className='form-control' style={{marginTop: '50px', marginLeft: '10px'}} id='inputUsername' type='text' value={this.state.username} placeholder={`Enter username`}
 					 onChange={this.handleUsername}/>
-				</div>
-				<div>
-					<input type='password' value={this.state.password} placeholder={`Enter password`}
+					<input className='form-control' style={{marginLeft:'10px'}} id='inputPassword' type='password' value={this.state.password} placeholder={`Enter password`}
 					 onChange={this.handlePassword}/>
-				</div>
-				<button onClick={this.handleNewAccount}> New Account </button>
-				<button style={{width: '70px'}} onClick={this.handleLogin}> Login </button>
+				</form>
+				<Button className='signin-button' style={{marginLeft: '5px'}} onClick={this.handleLogin}> Login </Button>
+				<Button className='signin-button' onClick={this.handleNewAccount}> New Account </Button>
 			</div>
 
 		)

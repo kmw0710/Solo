@@ -3,19 +3,23 @@ import axios from 'axios';
 import Navbar from './Navbar.jsx';
 import ItemList from './ItemList.jsx';
 import Data from './sampleData.jsx';
-import Login from '../public/Login.jsx';
+import Login from './Login.jsx';
+import CheckOut from './CheckOut.jsx';
+import CheckOutView from './CheckOutView.jsx';
 
 
 export default class App extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      items: Data,
-      currentItem: '',
-      savedItems: [{name: 'samsung', salePrice: 500}, {name:'lg', salePrice:150}],
+      items: [],
+      currentItem: [],
+      savedItems: [],
       username: '',
       password: '',
-      auth: true
+      auth: true,
+      index: '',
+      show: true
     }
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handlePriceRange = this.handlePriceRange.bind(this);
@@ -23,14 +27,39 @@ export default class App extends React.Component {
     this.handleNewAccount = this.handleNewAccount.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
+    this.handleOneItem = this.handleOneItem.bind(this);
+    this.handleClicked = this.handleClicked.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+    this.handleCheckOut = this.handleCheckOut.bind(this);
+    this.handleGoBack = this.handleGoBack.bind(this);
   }
 
   componentDidMount() {
+    var random = Math.random().toString(36).replace(/[^a-z]+/g, '').slice(0, 3)
+    axios({
+      method:'get', 
+      url: 'search',
+      params:{
+        lookup: random
+      }
+    })
+    .then(res => {
+      this.setState({
+        username: '',
+        password: '',
+        savedItems: [],
+        auth: true,
+        items: res.data
+      })
+    })
+  }
+
+  handleCheckOut() {
+    let totalPrice = this.state.savedItems.reduce((acc, ele) => {
+      return acc + ele.salePrice;
+    }, 0);
     this.setState({
-      username: '',
-      password: '',
-      savedItems: ['hi'],
-      auth: true
+      show: false
     })
   }
 
@@ -57,6 +86,23 @@ export default class App extends React.Component {
     })
   }
 
+  handleDelete() {
+    axios({
+      method: 'get',
+      url: '/delete',
+      params: {
+        Item: this.state.index,
+        username: this.state.username
+      }
+    })
+    .then(res => {
+      this.setState({
+        savedItems: res.data.savedItem
+      })
+    });
+    alert('Item deleted!')
+  }
+
   handleSaveItem(item) {
     if(this.state.auth === true) {
       alert('You need to log in!')
@@ -72,17 +118,36 @@ export default class App extends React.Component {
         data: {
           username: this.state.username,
           password: this.state.password,
-          savedItems: this.state.savedItems
+          savedItems: this.state.currentItem
         }
       })
       .then(res => {
         console.log('saved or not?')
+      });
+      axios({
+        method: 'get',
+        url: '/login',
+        params: {
+          username: this.state.username,
+          password: this.state.password
+        }
+      })
+      .then(res => {
+        console.log(res.data, 'RES DATA')
+        this.setState({
+          username: res.data.username,
+          password: res.data.password,
+          savedItems: res.data.savedItem
+        })
       })
     }
-
+    if (!this.state.auth) {
+      alert('Item added!')
+    }
   }
 
   handleNewAccount(user, pass) {
+    console.log('hi')
     axios({
       method: 'post',
       url: '/create',
@@ -92,27 +157,32 @@ export default class App extends React.Component {
       }
     })
     .then(res => {
-      console.log(res.data)
+      console.log(res.data, 'post then res')
       if (typeof res.data === 'string') {
         alert(res.data)
       }
     })
   }
 
-  handleLogin(user, pass) {
+  handleGoBack() {
+    this.setState({
+      show: true
+    })
+  }
+
+  handleLogin(username, password) {
     axios({
       method: 'get',
       url: '/login',
       params: {
-        username: user,
-        password: pass
+        username: username,
+        password: password
       }
     })
       .then(res => {
         if (typeof res.data === 'string') {
           alert(res.data)
         } else {
-          console.log(res.data)
           this.setState({
             username: res.data.username,
             password: res.data.password,
@@ -128,23 +198,56 @@ export default class App extends React.Component {
       username: '',
       password: '',
       savedItems: [],
-      auth: true
+      auth: true,
+      show: true
+    })
+  }
+
+  handleClicked(item, i) {
+    this.setState({
+      currentItem: item,
+      index: i
+    })
+
+  }
+
+  handleOneItem(clicked) {
+    this.setState({
+      currentItem: clicked
     })
   }
 
   render() {
+    let back = !this.state.show ? <button
+      onClick={this.handleGoBack}> Back </button> : '';
+    
+    
+
+    let normal = this.state.show ? <div>
+          <ItemList handleOneItem={this.handleOneItem} items={this.state.items} savedItems={this.state.savedItems} 
+          currentItem={this.state.currentItem} handlePriceRange={this.handlePriceRange} 
+          handleSaveItem={this.handleSaveItem} auth={this.state.auth}/>
+        </div> : '';
+
+    let unnormal = !this.state.show ? <div style={{marginTop: '100px'}}> <CheckOutView /> </div> : '';
+
+
     return (
       <div>
         <div className='Navbar'>
-        <Navbar handleLogout={this.handleLogout} auth={this.state.auth} items={this.state.items} 
-          handleSubmit={this.handleSubmit} savedItems={this.state.savedItems}
+        <Navbar handleDelete={this.handleDelete} handleCheckOut={this.handleCheckOut}
+          handleLogout={this.handleLogout} auth={this.state.auth} items={this.state.items} 
+          handleSubmit={this.handleSubmit} handleClicked={this.handleClicked} savedItems={this.state.savedItems}
           handleNewAccount={this.handleNewAccount} handleLogin={this.handleLogin}/>
+        <a className='back'>
+        {back}
+        </a>
         </div>
         <div>
-          <ItemList items={this.state.items} savedItems={this.state.savedItems} currentItem={this.state.currentItem} 
-            handlePriceRange={this.handlePriceRange} handleSaveItem={this.handleSaveItem}/>
+        {normal}{unnormal}
         </div>
-      </div>  
+      </div>
+
     );
   }
 }

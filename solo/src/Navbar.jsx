@@ -3,14 +3,17 @@ import {Button} from 'react-bootstrap';
 import SavedItems from './SavedItems.jsx';
 import axios from 'axios';
 import Login from './Login.jsx';
-
+import Search from 'react-icons/lib/fa/search';
+import Trash from 'react-icons/lib/fa/trash';
+import Cart from 'react-icons/lib/fa/cart-arrow-down';
+import CheckOut from './CheckOut.jsx';
 
 export default class Navbar extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			search: '',
-			savedItems: this.props.savedItems,
+			savedItems: [],
 			showItems: false,
 			showAcc: this.props.auth,
 			showOut: !this.props.auth
@@ -20,20 +23,20 @@ export default class Navbar extends React.Component {
 		this.showSavedItems = this.showSavedItems.bind(this);
 		this.itemClicked = this.itemClicked.bind(this);
 		this.logout = this.logout.bind(this);
+		this.deleteOne = this.deleteOne.bind(this);
+		this.itemClicked = this.itemClicked.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps) {
-		console.log(nextProps, 'nextProps')
 		this.setState({
 			showAcc: nextProps.auth,
 			showOut: !nextProps.auth,
-			savedItems: this.props.savedItems
+			savedItems: nextProps.savedItems
 		});
 	}
 
 	handleChange(event) {
 		let tempName = event.target.value;
-		console.log(tempName);
 		this.setState({
 			search: tempName
 		})
@@ -62,36 +65,56 @@ export default class Navbar extends React.Component {
 		})
 	}
 
-	itemClicked(hi) {
-		console.log('coming soon')
+	itemClicked(item, i) {
+		this.props.handleClicked(item, i)
+	}
+
+	deleteOne() {
+		this.props.handleDelete()
 	}
 
 	render() {
+		let totalPrice = this.state.savedItems.reduce((acc, ele) => {
+			return acc + ele.salePrice;
+		}, 0);
+		totalPrice = parseFloat(Math.round(totalPrice*100)/100).toFixed(2);
+
+		let showTotal = this.state.showItems ? 'Total price: ' + totalPrice : '';
+
+		let deleteItem = this.state.showOut ? <Button className='down' style={{width: '90px'}}
+			onClick={this.deleteOne}> <Trash /> </Button> : '';
+		
 		let showItems = this.state.savedItems.map((item, i) => {
 			if (this.state.showItems === true) {
-				return <SavedItems item={item} i={i} key={i} itemClicked={this.itemClicked} />
+				return <SavedItems className='down' item={item} i={i} key={i} itemClicked={this.itemClicked} />
 			}
 		})
 		let showLogin = this.state.showAcc ? <Login showAcc={this.state.showAcc} handleLogin={this.props.handleLogin} 
 			handleNewAccount={this.props.handleNewAccount}/> : '';
-		let showLogout = this.state.showOut ? <Button onClick={this.logout}>
+		let showLogout = this.state.showOut ? <Button className='down' style={{width:'75px'}} onClick={this.logout}>
 						 Log out </Button> : '';
-		let showCart = this.state.showOut ? <Button style={{marginRight: '15px', width: '165px'}} onClick={this.showSavedItems}>
-						 My Cart </Button> : '';
+		let showCart = this.state.showOut ? <Button className='down' style={{width: '90px'}} onClick={this.showSavedItems}>
+						 <Cart /></Button> : '';
+
+		let checkout = this.state.showOut ? <CheckOut totalPrice={totalPrice} className='down' handleCheckOut={this.props.handleCheckOut} /> : '';
+
 		return (
-			<div>
+			<div className='Navbar'>
 				<div>
 					<ul className='menu'>
 					{showLogout}
+					{deleteItem}
 					{showLogin}
 					{showCart}
 					{showItems}
+					{showTotal}
+					{checkout}
 					</ul>	
 				</div>
-				<div>
+				<div className='check'>
 					<input className='search' type="text" 
-					value={this.state.value} onChange={this.handleChange} placeholder="Search" />
-					<button onClick={this.handleSubmit}>search</button>
+					value={this.state.value} onChange={this.handleChange} placeholder="  What are you looking for?" />
+					<button className='searchButton' onClick={this.handleSubmit}><Search /></button>
 				</div>
 			</div>
 		)

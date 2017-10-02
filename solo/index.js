@@ -23,13 +23,30 @@ app.post('/save', (req, res) => {
 	let saveItem = req.body.savedItems;
 	let username = req.body.username;
 	User.findOne({'username': username}, (err, data) => {
-		console.log(data, 'thistime')
+		let tempSavedItem = data.savedItem;
+		tempSavedItem.push(saveItem);
+		data.savedItem = tempSavedItem;
+		data.save(err => {
+			if (err) console.log(err);
+			res.send(data);
+		})
+	});
+})
+
+app.get('/delete', (req, res) => {
+	let item = req.query.Item;
+	let username = req.query.username;
+	User.findOne({'username': username}, (err, data) => {
+		data.savedItem.splice(item, 1);
+		data.save(err => {
+			if (err) console.log(err);
+			res.send(data)
+		})
 	})
 })
 
 app.get('/search', (req, res) => {
 	let search = req.query.lookup;
-	console.log(req.session, 'req.session')
 	axios.get(`http://api.walmartlabs.com/v1/search?apiKey=${APIKEY}&query=${search}`)
 		.then(datas => {
 			res.send(datas.data.items)
@@ -40,33 +57,38 @@ app.post('/create', (req, res) => {
 	let username = req.body.username.toLowerCase();
 	let password = req.body.password;
 	User.find({'username': username}, function(err, data) {
-		console.log(data)
-		if (data.length === 0) {
+		if (data.length === 0 && password.length >= 4) {
 			User.create({
 				username: username,
 				password: password,
 				savedItem: []
 			});
 			res.send('New account is created!')
+		}	else if (password.length < 4) {
+			res.send('Password must be at least 4 characters!')
 		} else if (data.length !== 0) {
 			res.send('Username already exists!')
 		}
 	})
 })
 
+app.post('/charge', (req, res) => {
+	res.send(` I'm not charging you`)
+})
+
 app.get('/login', (req, res) => {
 	let tempUsername = req.query.username.toLowerCase();
 	let tempPassword = req.query.password;
 	User.find({'username': tempUsername}, (err, data) => {
-		if (data[0].password === tempPassword) {
-			console.log(data[0], 'data0')
+		if (data.length === 0) {
+			res.send('Username does not exist!')
+		} else if (data[0].password === tempPassword) {
 			res.send(data[0])
 		} else if (data[0].password !== tempPassword) {
 			res.send('Wrong password!')
 		}
 	})
 })
-
 
 app.listen(port, () => {
 	console.log(`server is listening on ${port}...`)

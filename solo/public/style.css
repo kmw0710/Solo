@@ -1,3 +1,5 @@
+
+
 .itemList {
 	padding: 1px;
   margin-top: 50px;
@@ -7,12 +9,8 @@
 .Navbar {
 	margin-top: 10px;
 	margin-right: 30px;
-	height: 50px;
-}
-
-.login {
-	margin-top: 10px;
-	margin-right: 15px;
+	height: 100px;
+  background-image: url('https://i.imgur.com/h4pG4x4.png');
 }
 
 .inner {
@@ -42,46 +40,131 @@
 }
 
 .currentItem {
-	margin-left: 410px;
+	margin-left: 390px;
 	margin-top: 100px;
 	height: 180px;
 	width: 460px;
 	border-style: solid;
+  border-radius: 30px;
+}
+
+.checkOutView {
+  height: 450px;
 }
 
 .add {
-	margin-left: 430px;
+	margin-left: 615px;
 	position: absolute;
+  font-size: 23px;
+  background-color: rgb(104, 145, 162);
+}
+
+.add:hover {
+  background-color: rgb(12, 97, 33);
 }
 
 .itemEntry {
 	display: inline-block;
 	width: 500px;
 	margin-top: 50px;
-	margin-left: 200px;
+	margin-left: 350px;
 	position: absolute;
 }
 
+.itemEntry: hover {
+  background-color: rgb(12, 97, 33);
+}
+
 .PriceRange {
-  width: 130px;
-  margin-top: 300px;
+  position: absolute;
+  width: 110px;
+  margin-left: 150px;
+  margin-top: 150px;
   display: flex;
   flex-flow: column;
   float: left;
+  font-size: 20px;
+}
+
+.check {
+  background-color: black;
+}
+.SavedItems {
+  border-style: solid;
+  border-radius: 5px;
+  margin-top: 50px;
 }
 
 .entry {
-	border-style: double;
+	border-style: solid;
 	overflow: hidden;
 	display: inline-block;
 	margin-right: 100px;
-	width:500px;
+	width: 500px;
+  border-radius: 30px;
+}
+
+.entry:hover {
+  background-color: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33));
+}
+
+.down {
+  margin-top: 50px;
+  height: 40px;
+  font-size: 16px;
+}
+
+.down:hover {
+  background-color: rgb(12, 97, 33);
 }
 
 .search {
-	margin-left: 500px;
-	margin-top: 100px;
-	width: 250px;
+  margin-top: 150px;
+  margin-left: 390px;
+  height: 36px;
+	width: 500px;
+  font-weight: 700;
+  font-size: 20px;
+  background: #f2f2f2;
+  font-family: 'Open Sans', sans-serif;
+  float: left;
+  border: 3px solid #00B4CC;
+  border-radius: 5px;
+  outline: none;
+  color: black;
+}
+
+.search:hover {
+  background-color: skyblue;
+}
+.search:focus {
+  background-color: white;
+  background: white;
+}
+
+.searchButton {
+  margin-top: 150px;
+  position: absolute;
+  margin-right: 220px;
+  border: 1px solid #00B4CC;
+  text-align: center;
+  color: rgb(42, 57, 58);
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 34px;
+}
+.searchButton:hover {  
+  background:#00a07b;
+  color:#fff;
+  border: 2px solid #00a07b;
+}
+
+
+.back {
+  height: 36px;
+}
+.back:hover {
+  background-color: black;
 }
 
 .menu {
@@ -95,146 +178,72 @@
 .menu a:hover {
 	background-color: grey;
 	opacity: 30%}
-/*
-body {
-  font-family:'Montserrat',sans-serif;
-}
-
-h1 {
-  margin: 20px;
-  color: #00a07b;
-}
-
-.app {
-  display: flex;
-  flex-flow: row;
-}
-
-.txn {
-  width: 80%;
-  margin: 20px;
-}
-
-.category {
-  width: 20%;
-  margin: 20px;
-}
-
-.txn-table {
-  display: flex;
-  flex-flow: column nowrap;
-  font-size: .8rem;
-  margin: 0.5rem;
-  line-height: 1.5;
-  flex: 1 1 auto;
-}
-
-.txn-header {
-  display: none;
-  font-weight: 700;
-  background-color: #f2f2f2;
-}
-
-.txn-header > .txn-data {
-  white-space: normal;
-}
-
-.txn-row {
-  width: 100%;
-  display: flex;
-  flex-flow: row nowrap;
-}
-
-.txn-row:nth-of-type(even) {
-  background-color: #f2f2f2;
-}
-
-.txn-row:nth-of-type(odd) {
-  background-color: #ffffff;
-}
-
-.txn-row:hover {
-  color: #00a07b;
-}
-
-.txn-data {
-  display: flex;
-  flex-flow: row nowrap;
-  flex-grow: 1;
-  flex-basis: 0;
-  padding: 0.5em;
-  word-break: break-word;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  min-width: 0px;
-  white-space: nowrap;
-  border-bottom: 1px solid #d0d0d0;
-}
-
-
-.category-list {
-  background-color: #00a07b;
-  color: white;
-  margin-top: 50px;
-}
-
-.category-data {
-  padding: 0.5em;
-  word-break: break-word;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  min-width: 0px;
- white-space: nowrap;
-
-}
-
-
-select {
-  float:right;
-  padding:8px 12px;
-  border:2px solid #78788c;
-  background:0;color:#5a5a6e;
-  cursor:pointer;
-  transition:all .3s;
-}
-
-input {
-  width:100%;
-  padding:10px;
-  box-sizing:border-box;
-  background:none;
-  outline:none;
-  resize:none;
-  border:0;
-  font-family:'Montserrat',sans-serif;
-  transition:all .3s;
-  border-bottom:2px solid #d0d0d0;
-}
-
-input:focus {
-  border-bottom:2px solid #00a07b;
-}
 
 button {
   float:right;
-  padding:8px 12px;
-  margin:20px 0px 20px 0px;
-  border:2px solid #00a07b;
+  border:2px solid #00B4CC;
   background:0;
   color:black;
   cursor:pointer;
   transition:all .3s;
 }
 
-button:hover {	
-  background:#00a07b;
-  color:#fff;
-  border: 2px solid #00a07b;
+.form-row {
+  margin-top: 100px;
 }
 
-.category-form {
-  margin-top: 2px;
 
+.form-signin #inputUsername,
+.form-signin #inputPassword {
+    direction: ltr;
+    height: 44px;
+    font-size: 16px;
 }
-*/
+
+.form-signin input[type=username],
+.form-signin input[type=password],
+.form-signin input[type=text],
+.form-signin button {  
+  width: 250px;
+  display: block;
+  margin-bottom: 5px;
+  z-index: 1;
+  position: relative;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  font-size: 25px;
+}
+
+.form-signin .form-control:focus {
+    border-color: rgb(104, 145, 162);
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgb(104, 145, 162);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgb(104, 145, 162);
+}
+
+.signin-button {
+  width: 123px;
+  background-color: #4d90fe;
+  background-color: rgb(104, 145, 162);
+  background-color: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33));
+  padding: 0px;
+  font-weight: 700;
+  font-size: 14px;
+  height: 36px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  border: none;
+  -o-transition: all 0.218s;
+  -moz-transition: all 0.218s;
+  -webkit-transition: all 0.218s;
+  transition: all 0.218s;
+}
+
+.signin-button:hover,
+.signin-button:active,
+.signin-button:focus {
+    background-color: rgb(12, 97, 33);
+}
 
